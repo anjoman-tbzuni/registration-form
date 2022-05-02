@@ -12,8 +12,54 @@ datasource db {
   // url      = "file:./dev.db"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
+model Member {
+  id    String  @id @default(uuid())
   email String  @unique
-  name  String?
+
+  name  String
+  family_name String
+  phone_number String @unique
+  verified_phone_number Boolean @default(false)
+  student_number Int @unique
+  dormitory_student Boolean @default(false)
+  dormitory String?
+  interests String[]
+  cooperation_areas String[]
+  activity_records String?
+  role Role @default(User) 
+
+  school_profile SchoolProfile[]
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum Degree {
+  BA
+  MA
+  PHD
+}
+
+model SchoolProfile {
+  id Int @id @default(autoincrement())
+
+  degree Degree
+  univercity String?
+  college String?
+  field String?
+  entrance String?
+  orientation String?
+
+  member Member @relation(fields: [memberId], references: [id])
+  memberId String
+}
+
+model AuthCode {
+  id Int @id @default(autoincrement())
+
+  phone_number String @unique
+  pin String
+  expires_after DateTime
 }
