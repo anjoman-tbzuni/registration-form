@@ -5,7 +5,7 @@ export default defineEventHandler(async (req: CompatibilityEvent) => {
   const { email, name, phoneNumber, familyName, studentNumber } =
     (await useBody(req)) as CreateMember;
 
-  let member = await prisma.member.findUnique({ where: { email } });
+  let member = await prisma.member.findUnique({ where: { phoneNumber } });
 
   if (!member) {
     member = await prisma.member.create({
@@ -20,7 +20,7 @@ export default defineEventHandler(async (req: CompatibilityEvent) => {
   }
 
   const accessToken = jwt.signPayload({
-    email: member.email,
+    phoneNumber: member.phoneNumber,
   });
   setCookie(req, 'access_token', accessToken, {
     secure: true,

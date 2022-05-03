@@ -9,3 +9,7 @@ interface CreateMember {
 interface UpdateMember {
   activityRecords?: string;
 }
+
+interface Payload {
+  phoneNumber: string;
+}

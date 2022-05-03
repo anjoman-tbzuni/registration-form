@@ -4,6 +4,6 @@ import prisma from '~~/server/utils/prisma';
 export default defineEventHandler(async (req: CompatibilityEvent) => {
   const { token } = useQuery(req) as { token: string };
 
-  const { email } = jwt.verifyToken(token) as CreateMember;
-  return await prisma.member.findUnique({ where: { email } });
+  const { phoneNumber } = jwt.verifyToken(token) as Payload;
+  return await prisma.member.findUnique({ where: { phoneNumber } });
 });
