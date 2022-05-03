@@ -1,9 +1,15 @@
 <template>
   <div>
     <h2>ثبت نام</h2>
+    <ul v-if="errors.length">
+      <li class="text-sm text-red-500" v-for="err in errors" :key="err">
+        {{ err }}
+      </li>
+    </ul>
     <FormKit
+      v-else
       type="form"
-      v-model="data"
+      v-model="body"
       submit-label="ثبت نام"
       :classes="{
         actions:
@@ -12,6 +18,7 @@
       }"
       incomplete-message="لطفا اطلاعات وارد شده را اصلاح کنید."
       :config="{ validationVisibility: 'submit' }"
+      @submit="submitForm"
     >
       <FormKit
         type="text"
@@ -27,7 +34,7 @@
 
       <FormKit
         type="text"
-        name="email"
+        name="familyName"
         placeholder="نام خانوادگی"
         :classes="textClasses"
         validation-visibility="submit"
@@ -91,7 +98,13 @@
 
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
-const data = ref({});
+
+interface MemberForm extends Omit<CreateMember, 'studentNumber'> {
+  studentNumber: string;
+}
+
+const body = ref<MemberForm>({} as MemberForm);
+const errors = ref([]);
 
 // Classes
 const textClasses = {
@@ -103,5 +116,18 @@ const textClasses = {
   help: 'text-xs text-gray-500',
   message: 'text-xs text-red-500',
 };
-const submitForm = () => {};
+
+const submitForm = async () => {
+  const { data } = await useFetch('/api/members', {
+    method: 'POST',
+    body: {
+      ...body.value,
+      studentNumber: parseInt(body.value.studentNumber),
+    },
+  });
+
+  if (typeof data.value === 'string') {
+    errors.value.push(data.value);
+  }
+};
 </script>
