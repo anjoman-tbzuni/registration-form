@@ -1,5 +1,4 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  console.log('global middle ware');
   const token = useCookie('access_token');
 
   if (token.value) {
