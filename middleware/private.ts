@@ -1,8 +1,8 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  console.log('private');
   const router = useRouter();
 
-  const member = await $fetch(`/api/members/me?token=${to.params.token}`);
-  if (member) {
+  if (to.params.studentNumber) {
     navigateTo('/');
   }
   router.push('/login');
