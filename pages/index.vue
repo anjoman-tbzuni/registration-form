@@ -1,15 +1,12 @@
 <script lang="ts" setup>
 const { error, data: allUsers, refresh } = await useFetch('/api/members');
 
-const clicked = () => console.log('hi');
 setTimeout(refresh, 1000);
 </script>
 
 <template>
   <div class="flex flex-col m-6 items-center">
-    <NuxtLink :to="{ name: 'profile', force: true }" @click="clicked"
-      >profile</NuxtLink
-    >
+    <NuxtLink :to="{ name: 'profile', force: true }">profile</NuxtLink>
     <p v-if="error">{{ error }}</p>
     <div v-else>{{ allUsers }}</div>
   </div>

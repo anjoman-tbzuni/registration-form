@@ -14,8 +14,8 @@ datasource db {
 
 model Member {
   id    String  @id @default(uuid())
-  email String  @unique
 
+  email String?  
   name  String
   familyName String
   phoneNumber String @unique
