@@ -7,5 +7,6 @@ export const useMemberStore = defineStore('member', {
     phoneNumber: null,
     email: null,
     studentNumber: null,
+    verifiedPhoneNumber: false,
   }),
 });
