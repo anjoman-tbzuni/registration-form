@@ -9,7 +9,11 @@ module.exports = {
     './assets/**/*.css',
   ],
   theme: {
-    extend: {},
+    extend: {
+      letterSpacing: {
+        widest: '1rem',
+      },
+    },
   },
   variants: {
     extend: {},

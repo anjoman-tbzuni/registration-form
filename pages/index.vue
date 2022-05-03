@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-const route = useRoute();
-// setTimeout(refresh, 1000);
+import { useMemberStore } from '@/store/member';
+
+const memberStore = useMemberStore();
 </script>
 
 <template>
   <div class="flex flex-col mt-5">
-    <MemberRegister v-if="!route.params.member" />
+    <MemberRegister v-if="!memberStore.phoneNumber" />
     <MemberProfile v-else />
   </div>
 </template>
