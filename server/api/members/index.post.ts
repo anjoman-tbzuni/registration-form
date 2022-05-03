@@ -25,10 +25,10 @@ export default defineEventHandler(async (req: CompatibilityEvent) => {
       phoneNumber: member.phoneNumber,
     });
 
-    // setCookie(req, 'access_token', accessToken, {
-    //   secure: true,
-    // });
-    return accessToken;
+    setCookie(req, 'access_token', accessToken, {
+      secure: true,
+    });
+    return member;
   } catch (err: any) {
     return err.message;
   }
