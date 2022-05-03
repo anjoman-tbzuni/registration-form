@@ -5,7 +5,7 @@ setTimeout(refresh, 1000);
 </script>
 
 <template>
-  <div class="flex flex-col m-6 items-center">
+  <div class="flex flex-col items-center">
     <NuxtLink :to="{ name: 'profile', force: true }">profile</NuxtLink>
     <p v-if="error">{{ error }}</p>
     <div v-else>{{ allUsers }}</div>
