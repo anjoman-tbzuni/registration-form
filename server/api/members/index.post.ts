@@ -6,8 +6,11 @@ export default defineEventHandler(async (req: CompatibilityEvent) => {
     (await useBody(req)) as CreateMember;
 
   let member = await prisma.member.findUnique({ where: { phoneNumber } });
+  if (member) {
+    return 'شما قبلا ثبت نام کرده اید.';
+  }
 
-  if (!member) {
+  try {
     member = await prisma.member.create({
       data: {
         name,
@@ -17,13 +20,16 @@ export default defineEventHandler(async (req: CompatibilityEvent) => {
         studentNumber,
       },
     });
-  }
 
-  const accessToken = jwt.signPayload({
-    phoneNumber: member.phoneNumber,
-  });
-  setCookie(req, 'access_token', accessToken, {
-    secure: true,
-  });
-  return accessToken;
+    const accessToken = jwt.signPayload({
+      phoneNumber: member.phoneNumber,
+    });
+
+    // setCookie(req, 'access_token', accessToken, {
+    //   secure: true,
+    // });
+    return accessToken;
+  } catch (err: any) {
+    return err.message;
+  }
 });
