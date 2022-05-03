@@ -7,14 +7,25 @@
       </h1>
     </div>
     <NuxtPage />
-    <div class="footer">
-      <NuxtLink to="/about">معرفی انجمن</NuxtLink>
+    <div class="footer group">
+      <NuxtLink to="/about" class="flex flex-row items-center">
+        <p>معرفی انجمن</p>
+        <Icon icon="bi:arrow-left" />
+      </NuxtLink>
     </div>
   </div>
 </template>
 
+<script setup>
+import { Icon } from '@iconify/vue';
+</script>
+
 <style lang="postcss">
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+  @apply transition-all;
+}
 
 body {
   @apply bg-slate-100;
@@ -30,11 +41,29 @@ body {
 }
 
 .nav {
-  @apply border-slate-300 py-2 text-center border-b-2 flex flex-row items-center justify-center;
+  @apply border-slate-300 py-2 text-center border-b flex flex-row items-center justify-center;
   direction: rtl;
 }
 
 .footer {
-  @apply bottom-1 left-2 right-2 absolute bg-slate-800 text-slate-100 m-1 self-center p-2 text-center text-sm rounded-xl hover:bg-slate-900 cursor-pointer transition-all;
+  @apply bottom-1 left-2 right-2 absolute text-slate-800 m-1 self-center p-2 border-t border-t-slate-300 text-sm cursor-pointer hover:text-slate-900;
+  :hover p {
+    @apply pl-2;
+  }
+  p {
+    @apply pl-1;
+  }
+}
+
+h1 {
+  @apply text-lg font-medium text-slate-700;
+}
+
+h2 {
+  @apply text-base font-medium text-slate-700 pt-2 pb-4;
+}
+
+button {
+  @apply w-full h-full py-2;
 }
 </style>
