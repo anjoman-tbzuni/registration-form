@@ -11,7 +11,7 @@ const submit = async () => {
   if (!loginBody.email) {
     loginError.value = 'please write your email';
   } else {
-    const res = await useFetch('/api/users', {
+    const res = await useFetch('/api/members', {
       method: 'POST',
       body: loginBody,
     });
