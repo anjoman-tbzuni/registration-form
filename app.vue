@@ -18,6 +18,7 @@
 
 body {
   @apply bg-slate-100;
+  direction: rtl;
   font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -25,11 +26,11 @@ body {
 }
 
 .container {
-  @apply self-center m-auto max-w-md bg-slate-100 min-h-screen relative flex flex-col justify-center p-2 max-h-screen;
+  @apply m-auto max-w-md bg-slate-100 min-h-screen relative flex flex-col p-2 max-h-screen;
 }
 
 .nav {
-  @apply absolute top-1 left-2 right-2 border-slate-300 m-1 py-2 text-center border-b-2 flex flex-row items-center justify-center;
+  @apply border-slate-300 py-2 text-center border-b-2 flex flex-row items-center justify-center;
   direction: rtl;
 }
 

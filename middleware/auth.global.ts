@@ -5,16 +5,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const member = (await $fetch(
       `/api/members/me?token=${token.value}`,
     )) as Member;
-    if (member) {
-      to.params = {
-        token: token.value,
-        ...member,
-      };
-    } else {
-      to.params = {
-        token: token.value,
-      };
-    }
+    to.params = {
+      token: token.value,
+      member,
+    };
   }
 
   navigateTo('/');

@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-const { error, data: allUsers, refresh } = await useFetch('/api/members');
-
-setTimeout(refresh, 1000);
+const route = useRoute();
+// setTimeout(refresh, 1000);
 </script>
 
 <template>
-  <div class="flex flex-col items-center">
-    <NuxtLink :to="{ name: 'profile', force: true }">profile</NuxtLink>
-    <p v-if="error">{{ error }}</p>
-    <div v-else>{{ allUsers }}</div>
+  <div class="flex flex-col mt-5">
+    <MemberRegister v-if="!route.params.member" />
+    <MemberProfile v-else />
   </div>
 </template>
 
