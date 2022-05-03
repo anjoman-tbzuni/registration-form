@@ -98,10 +98,13 @@
 
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
+import { useMemberStore } from '@/store/member';
 
 interface MemberForm extends Omit<CreateMember, 'studentNumber'> {
   studentNumber: string;
 }
+
+const memberStore = useMemberStore();
 
 const body = ref<MemberForm>({} as MemberForm);
 const errors = ref([]);
@@ -118,16 +121,20 @@ const textClasses = {
 };
 
 const submitForm = async () => {
-  const { data } = await useFetch('/api/members', {
+  const data = (await $fetch('/api/members', {
     method: 'POST',
     body: {
       ...body.value,
       studentNumber: parseInt(body.value.studentNumber),
     },
-  });
+  })) as Member;
 
-  if (typeof data.value === 'string') {
-    errors.value.push(data.value);
+  if (typeof data === 'string') {
+    errors.value.push(data);
+  } else {
+    memberStore.$patch({
+      ...data,
+    });
   }
 };
 </script>
