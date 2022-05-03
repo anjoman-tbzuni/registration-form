@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', '@formkit/nuxt'],
-  buildModules: ['@vueuse/nuxt'],
+  buildModules: ['@vueuse/nuxt', '@pinia/nuxt'],
   build: {
     transpile: [
       // '@heroicons/vue' // uncomment if you are using heroicons
