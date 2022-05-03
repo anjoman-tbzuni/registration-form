@@ -1,9 +1,9 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const token = useCookie('access_token');
+  const router = useRouter();
 
-  const user: User = await $fetch(`/api/users/me?token=${token.value}`);
-  if (user.email) {
-    return true;
+  const member = await $fetch(`/api/members/me?token=${to.params.token}`);
+  if (member) {
+    navigateTo('/');
   }
-  return false;
+  router.push('/login');
 });
