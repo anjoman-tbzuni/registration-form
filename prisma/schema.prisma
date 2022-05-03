@@ -17,18 +17,18 @@ model Member {
   email String  @unique
 
   name  String
-  family_name String
-  phone_number String @unique
-  verified_phone_number Boolean @default(false)
-  student_number Int @unique
-  dormitory_student Boolean @default(false)
+  familyName String
+  phoneNumber String @unique
+  verifiedPhoneNumber Boolean @default(false)
+  studentNumber Int @unique
+  dormitoryStudent Boolean @default(false)
   dormitory String?
   interests String[]
-  cooperation_areas String[]
-  activity_records String?
+  cooperationAreas String[]
+  activityRecords String?
   role Role @default(User) 
 
-  school_profile SchoolProfile[]
+  schoolProfile SchoolProfile[]
 }
 
 enum Role {
@@ -59,7 +59,7 @@ model SchoolProfile {
 model AuthCode {
   id Int @id @default(autoincrement())
 
-  phone_number String @unique
+  phoneNumber String @unique
   pin String
-  expires_after DateTime
+  expiresAfter DateTime
 }
