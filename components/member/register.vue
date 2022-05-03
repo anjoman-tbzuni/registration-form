@@ -8,7 +8,7 @@
       :classes="{
         actions:
           'bg-slate-800 text-center text-slate-100 rounded-xl text-sm hover:bg-slate-900 transition cursor-pointer',
-        message: 'text-xs text-red-500',
+        message: 'text-xs text-red-500 pb-2',
       }"
       incomplete-message="لطفا اطلاعات وارد شده را اصلاح کنید."
       :config="{ validationVisibility: 'submit' }"
@@ -77,6 +77,7 @@
           length: 'شماره تماس وارد شده صحیح نمیباشد.',
         }"
       />
+
       <div class="flex flex-row pb-3">
         <Icon icon="emojione:warning" />
         <p class="text-xs pr-1">
