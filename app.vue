@@ -66,4 +66,14 @@ h2 {
 button {
   @apply w-full h-full py-2;
 }
+
+.logs {
+  @apply text-sm;
+  .error {
+    @apply text-red-500;
+  }
+  .message {
+    @apply text-slate-700;
+  }
+}
 </style>
