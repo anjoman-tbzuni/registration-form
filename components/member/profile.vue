@@ -32,12 +32,28 @@
         :pending="pending"
       />
     </div>
+
+    <div
+      v-if="logs.error.length || logs.message.length"
+      class="mt-2 p-1 text-sm logs"
+    >
+      <p v-if="logs.error.length" class="error">
+        {{ logs.error }}
+      </p>
+      <p v-if="logs.message.length" class="message">
+        {{ logs.message }}
+      </p>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { useMemberStore } from '@/store/member';
 
 const memberStore = useMemberStore();
+const logs = reactive({
+  error: '',
+  message: '',
+});
 
 const { data, refresh, pending } = await useAsyncData(
   `/api/members/verfiy`,
@@ -77,7 +93,22 @@ const resend = async () => {
 };
 
 const verify = async (pin: string) => {
-  console.log('verify', pin);
+  const { data } = await useFetch<{ error: string; message: string }>(
+    '/api/members/verify',
+    {
+      method: 'POST',
+      headers: useRequestHeaders(['cookie']),
+      body: {
+        pin,
+      },
+    },
+  );
+
+  if (data.value.message) {
+    logs.message = data.value.message;
+  } else {
+    logs.error = data.value.error;
+  }
 };
 </script>
 
