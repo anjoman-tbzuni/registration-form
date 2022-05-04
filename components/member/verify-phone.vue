@@ -2,7 +2,9 @@
   <div>
     <div class="flex flex-row mt-3">
       <Icon icon="emojione:warning" />
-      <p class="text-xs pr-1">لطفا احراز هویت را تکیمل کنید.</p>
+      <p class="text-xs pr-1">
+        کد احراز هویت برای شما ارسال شده. لطفا احراز هویت را تکیمل کنید.
+      </p>
     </div>
 
     <FormKit

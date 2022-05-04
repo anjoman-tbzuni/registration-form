@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <h1 class="my-2">اطلاعات ثبت نام</h1>
     <div class="row">
       <label>نام:</label>
       <p>{{ memberStore.name }}</p>
@@ -20,7 +21,8 @@
       <label>ایمیل:</label>
       <p>{{ memberStore.email }}</p>
     </div>
-    <div v-if="!memberStore.verifiedPhoneNumber">
+
+    <div class="mt-3" v-if="!memberStore.verifiedPhoneNumber">
       <MemberVerifyPhone
         @resend="resend"
         @verify="verify"
@@ -36,16 +38,14 @@
 import { useMemberStore } from '@/store/member';
 
 const memberStore = useMemberStore();
-const readyToVerify = ref(false);
 
 const { data, refresh, pending } = await useAsyncData(
-  `/api/members/send-verify-code`,
+  `/api/members/verfiy`,
   () =>
-    $fetch('/api/members/send-verify-code', {
+    $fetch('/api/members/verify', {
       headers: useRequestHeaders(['cookie']),
     }),
 );
-readyToVerify.value = true;
 
 const pinExpires = ref(new Date(data.value).getTime());
 const now = ref(new Date().getTime());
@@ -83,11 +83,11 @@ const verify = async (pin: string) => {
 
 <style lang="postcss" scoped>
 .main {
-  @apply flex flex-col text-base;
+  @apply flex flex-col text-base last:border-b-0;
 }
 
 .row {
-  @apply flex flex-row my-1;
+  @apply border-b flex flex-row py-3 border-slate-200;
 }
 
 label {
