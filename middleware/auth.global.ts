@@ -1,13 +1,13 @@
 import { useMemberStore } from '@/store/member';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const token = useCookie('access_token');
   const memberStore = useMemberStore();
 
-  if (token.value) {
-    const member = (await $fetch(
-      `/api/members/me?token=${token.value}`,
-    )) as Member;
+  const member = (await $fetch(`/api/members/me`, {
+    headers: useRequestHeaders(['cookie']),
+  })) as Member;
+
+  if (member) {
     memberStore.$patch({
       ...member,
     });

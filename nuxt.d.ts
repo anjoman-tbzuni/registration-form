@@ -10,6 +10,6 @@ interface UpdateMember {
   activityRecords?: string;
 }
 
-interface Payload {
+interface JwtPayload {
   phoneNumber: string;
 }
