@@ -30,6 +30,7 @@
     "@formkit/nuxt": "^1.0.0-beta.6",
     "@pinia/nuxt": "^0.1.8",
     "@prisma/client": "3.13.0",
+    "axios": "^0.27.2",
     "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.3.4",
     "pinia": "^2.0.13"

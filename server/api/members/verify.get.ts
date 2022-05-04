@@ -1,5 +1,6 @@
 import { authenticationCodeGenerator } from '~~/server/utils/nanoid';
 import prisma from '~~/server/utils/prisma';
+import sms from '~~/server/utils/sms';
 
 export default defineEventHandler(async (event) => {
   let phoneNumber: string;
@@ -21,13 +22,19 @@ export default defineEventHandler(async (event) => {
           },
         };
       }
-      const { expiresAfter } = await prisma.authCode.update({
+      const {
+        expiresAfter,
+        pin: code,
+        phoneNumber: to,
+      } = await prisma.authCode.update({
         where: { phoneNumber },
         data: {
           pin: authenticationCodeGenerator(),
-          expiresAfter: new Date(Date.now() + 10 * 1000),
+          expiresAfter: new Date(Date.now() + 300 * 1000),
         },
       });
+
+      await sms.sendAuthCode(to, code);
 
       return {
         ok: true,
@@ -37,13 +44,19 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const { expiresAfter } = await prisma.authCode.create({
+    const {
+      expiresAfter,
+      pin: code,
+      phoneNumber: to,
+    } = await prisma.authCode.create({
       data: {
         phoneNumber,
-        expiresAfter: new Date(Date.now() + 10 * 1000),
+        expiresAfter: new Date(Date.now() + 300 * 1000),
         pin: authenticationCodeGenerator(),
       },
     });
+
+    await sms.sendAuthCode(to, code);
 
     return {
       ok: true,
