@@ -7,6 +7,7 @@ const memberStore = useMemberStore();
 <template>
   <div class="flex flex-col mt-5">
     <MemberRegister v-if="!memberStore.phoneNumber" />
+    <MemberVerifyPhone v-else-if="!memberStore.verifiedPhoneNumber" />
     <MemberProfile v-else />
   </div>
 </template>

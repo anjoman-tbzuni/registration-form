@@ -47,7 +47,7 @@
         validation="required|email"
         :validation-messages="{
           required: 'لطفا ایمل خود را وارد کنید.',
-          email: 'ایمل وارد شده سحیح نمیباشد.',
+          email: 'ایمل وارد شده صحیح نمیباشد.',
         }"
       />
 

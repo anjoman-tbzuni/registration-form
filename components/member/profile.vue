@@ -22,109 +22,26 @@
       <p>{{ memberStore.email }}</p>
     </div>
 
-    <div class="mt-3" v-if="!memberStore.verifiedPhoneNumber">
-      <MemberVerifyPhone
-        @resend="resend"
-        @verify="verify"
-        :timeLeft="timeLeft"
-        :mins="mins"
-        :secs="secs"
-        :pending="pending"
-      />
-    </div>
-    <button v-else></button>
+    <!-- <div class="mt-3" v-if="!memberStore.verifiedPhoneNumber"> -->
+    <!--   <MemberVerifyPhone -->
+    <!--     @resend="resend" -->
+    <!--     @verify="verify" -->
+    <!--     :timeLeft="timeLeft" -->
+    <!--     :mins="mins" -->
+    <!--     :secs="secs" -->
+    <!--     :pending="pending" -->
+    <!--   /> -->
+    <!-- </div> -->
 
-    <div
-      v-if="logs.error.length || logs.message.length"
-      class="mt-2 p-1 text-sm logs"
-    >
-      <p v-if="logs.error.length" class="error">
-        {{ logs.error }}
-      </p>
-      <p v-if="logs.message.length" class="message">
-        {{ logs.message }}
-      </p>
-    </div>
+    <button class="bg-slate-700 text-slate-200 hover:bg-slate-900">
+      <NuxtLink to="/update-profile"> تکمیل اطلاعات </NuxtLink>
+    </button>
   </div>
 </template>
 <script lang="ts" setup>
 import { useMemberStore } from '@/store/member';
 
 const memberStore = useMemberStore();
-const logs = reactive({
-  error: '',
-  message: '',
-});
-
-const pinExpires = ref();
-const now = ref();
-const timeLeft = ref();
-const mins = ref();
-const secs = ref();
-
-let verify: (pin: string) => void;
-let resend: () => void;
-
-if (!memberStore.verifiedPhoneNumber) {
-  const { data, refresh, pending } = await useAsyncData<
-    ResponseData<SendTokenResponse>
-  >(`/api/members/verfiy`, () =>
-    $fetch('/api/members/verify', {
-      headers: useRequestHeaders(['cookie']),
-    }),
-  );
-
-  pinExpires.value = new Date(data.value.data.expiresAfter).getTime();
-  now.value = new Date().getTime();
-  timeLeft.value = pinExpires.value - now.value;
-  mins.value = Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60));
-  secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
-
-  const timer = () => {
-    setTimeout(() => {
-      now.value = new Date().getTime();
-      timeLeft.value = pinExpires.value - now.value;
-      if (timeLeft.value > 0) {
-        mins.value = Math.floor(
-          (timeLeft.value % (1000 * 60 * 60)) / (1000 * 60),
-        );
-        secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
-      }
-      timer();
-      pending.value = false;
-    }, 1000);
-  };
-
-  timer();
-
-  resend = async () => {
-    await refresh();
-    pinExpires.value = new Date(data.value.data.expiresAfter).getTime();
-    pending.value = true;
-  };
-
-  verify = async (pin: string) => {
-    const { data } = await useFetch<ResponseData<undefined>>(
-      '/api/members/verify',
-      {
-        method: 'POST',
-        headers: useRequestHeaders(['cookie']),
-        body: {
-          pin,
-        },
-      },
-    );
-
-    if (data.value.ok) {
-      logs.error = '';
-      logs.message = data.value.message;
-      setTimeout(() => location.reload(), 1000);
-    } else {
-      logs.error = data.value.error;
-      logs.message = '';
-    }
-  };
-}
 </script>
 
 <style lang="postcss" scoped>
