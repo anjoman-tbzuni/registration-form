@@ -1,13 +1,7 @@
 <template>
   <div>
     <h2>ثبت نام</h2>
-    <ul v-if="errors.length">
-      <li class="text-sm text-red-500" v-for="err in errors" :key="err">
-        {{ err }}
-      </li>
-    </ul>
     <FormKit
-      v-else
       type="form"
       v-model="body"
       submit-label="ثبت نام"
@@ -93,12 +87,19 @@
         </p>
       </div>
     </FormKit>
+
+    <ul v-if="errors.length" class="mt-3">
+      <li class="text-sm text-red-500" v-for="err in errors" :key="err">
+        {{ err }}
+      </li>
+    </ul>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
 import { useMemberStore } from '@/store/member';
+import { Member } from '.prisma/client';
 
 interface MemberForm extends Omit<CreateMember, 'studentNumber'> {
   studentNumber: string;
@@ -121,20 +122,20 @@ const textClasses = {
 };
 
 const submitForm = async () => {
-  const data = (await $fetch('/api/members', {
+  const { data } = await useFetch<ResponseData<Member>>('/api/members', {
     method: 'POST',
     body: {
       ...body.value,
       studentNumber: parseInt(body.value.studentNumber),
     },
-  })) as Member;
+  });
 
-  if (typeof data === 'string') {
-    errors.value.push(data);
-  } else {
+  if (data.value.ok) {
     memberStore.$patch({
-      ...data,
+      ...data.value.data,
     });
+  } else {
+    errors.value.push(data.value.error);
   }
 };
 </script>

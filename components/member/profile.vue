@@ -55,15 +55,15 @@ const logs = reactive({
   message: '',
 });
 
-const { data, refresh, pending } = await useAsyncData(
-  `/api/members/verfiy`,
-  () =>
-    $fetch('/api/members/verify', {
-      headers: useRequestHeaders(['cookie']),
-    }),
+const { data, refresh, pending } = await useAsyncData<
+  ResponseData<SendTokenResponse>
+>(`/api/members/verfiy`, () =>
+  $fetch('/api/members/verify', {
+    headers: useRequestHeaders(['cookie']),
+  }),
 );
 
-const pinExpires = ref(new Date(data.value).getTime());
+const pinExpires = ref(new Date(data.value.data.expiresAfter).getTime());
 const now = ref(new Date().getTime());
 const timeLeft = ref(pinExpires.value - now.value);
 const mins = ref(Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60)));
@@ -88,12 +88,12 @@ timer();
 
 const resend = async () => {
   await refresh();
-  pinExpires.value = new Date(data.value).getTime();
+  pinExpires.value = new Date(data.value.data.expiresAfter).getTime();
   pending.value = true;
 };
 
 const verify = async (pin: string) => {
-  const { data } = await useFetch<{ error: string; message: string }>(
+  const { data } = await useFetch<ResponseData<undefined>>(
     '/api/members/verify',
     {
       method: 'POST',
@@ -104,10 +104,13 @@ const verify = async (pin: string) => {
     },
   );
 
-  if (data.value.message) {
+  if (data.value.ok) {
+    logs.error = '';
     logs.message = data.value.message;
+    setTimeout(() => location.reload(), 1000);
   } else {
     logs.error = data.value.error;
+    logs.message = '';
   }
 };
 </script>

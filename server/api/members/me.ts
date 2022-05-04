@@ -1,6 +1,13 @@
-export default defineEventHandler(async (req: CompatibilityEvent) => {
-  if (req.context.auth) {
-    return req.context.auth;
+export default defineEventHandler(async (event) => {
+  if (event.context.auth) {
+    return {
+      ok: true,
+      data: event.context.auth,
+    };
   }
-  return null;
+
+  return {
+    ok: false,
+    error: `you're not loged in`,
+  };
 });

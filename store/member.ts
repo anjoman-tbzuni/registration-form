@@ -2,11 +2,11 @@ import { defineStore } from 'pinia';
 
 export const useMemberStore = defineStore('member', {
   state: () => ({
-    name: null,
-    familyName: null,
-    phoneNumber: null,
-    email: null,
-    studentNumber: null,
+    name: undefined as string,
+    familyName: undefined as string,
+    phoneNumber: undefined as string,
+    email: undefined as string,
+    studentNumber: undefined as number,
     verifiedPhoneNumber: false,
   }),
 });

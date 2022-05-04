@@ -1,6 +1,6 @@
 import prisma from '~~/server/utils/prisma';
 
-export default defineEventHandler(async (event: CompatibilityEvent) => {
+export default defineEventHandler(async (event) => {
   const { pin: givenPin } = await useBody(event);
   const { phoneNumber } = event.context.auth;
 
@@ -16,17 +16,20 @@ export default defineEventHandler(async (event: CompatibilityEvent) => {
       });
 
       return {
+        ok: true,
         error: null,
         message: 'احراز هویت موفقیت آمیز بود.',
       };
     }
 
     return {
+      ok: false,
       error: 'کد وارد شده اشتباه است.',
       message: null,
     };
   } catch (err) {
     return {
+      ok: false,
       error: err.message,
       message: null,
     };

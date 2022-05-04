@@ -1,15 +1,16 @@
 import { useMemberStore } from '@/store/member';
+import { Member } from '@prisma/client';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const memberStore = useMemberStore();
 
-  const member = (await $fetch(`/api/members/me`, {
+  const data = await $fetch<ResponseData<Member>>(`/api/members/me`, {
     headers: useRequestHeaders(['cookie']),
-  })) as Member;
+  });
 
-  if (member) {
+  if (data.ok) {
     memberStore.$patch({
-      ...member,
+      ...data.data,
     });
   }
 

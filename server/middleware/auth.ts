@@ -1,7 +1,7 @@
 import jwt from '../utils/jwt';
 import prisma from '../utils/prisma';
 
-export default defineEventHandler(async (event: CompatibiliyEvent) => {
+export default defineEventHandler(async (event) => {
   const cookies = useCookies(event);
   const accessToken = cookies['access_token'];
 

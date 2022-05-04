@@ -1,36 +1,60 @@
 import { authenticationCodeGenerator } from '~~/server/utils/nanoid';
 import prisma from '~~/server/utils/prisma';
 
-export default defineEventHandler(async (req: CompatibilityEvent) => {
+export default defineEventHandler(async (event) => {
   let phoneNumber: string;
-  if (req.context.auth) {
-    phoneNumber = req.context.auth.phoneNumber;
+
+  if (event.context.auth) {
+    phoneNumber = event.context.auth.phoneNumber;
   } else {
-    phoneNumber = (useQuery(req) as { phoneNumber: string }).phoneNumber;
+    phoneNumber = (useQuery(event) as { phoneNumber: string }).phoneNumber;
   }
 
-  const pin = await prisma.authCode.findUnique({ where: { phoneNumber } });
-  if (pin) {
-    if (pin.expiresAfter.getTime() > Date.now()) {
-      return pin.expiresAfter;
+  try {
+    const pin = await prisma.authCode.findUnique({ where: { phoneNumber } });
+    if (pin) {
+      if (pin.expiresAfter.getTime() > Date.now()) {
+        return {
+          ok: true,
+          data: {
+            expiresAfter: pin.expiresAfter.toString(),
+          },
+        };
+      }
+      const { expiresAfter } = await prisma.authCode.update({
+        where: { phoneNumber },
+        data: {
+          pin: authenticationCodeGenerator(),
+          expiresAfter: new Date(Date.now() + 10 * 1000),
+        },
+      });
+
+      return {
+        ok: true,
+        data: {
+          expiresAfter: expiresAfter.toString(),
+        },
+      };
     }
-    const { expiresAfter } = await prisma.authCode.update({
-      where: { phoneNumber },
+
+    const { expiresAfter } = await prisma.authCode.create({
       data: {
+        phoneNumber,
+        expiresAfter: new Date(Date.now() + 10 * 1000),
         pin: authenticationCodeGenerator(),
-        expiresAfter: new Date(Date.now() + 300 * 1000),
       },
     });
 
-    return expiresAfter;
+    return {
+      ok: true,
+      data: {
+        expiresAfter: expiresAfter.toString(),
+      },
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err.message,
+    };
   }
-
-  const { expiresAfter } = await prisma.authCode.create({
-    data: {
-      phoneNumber,
-      expiresAfter: new Date(Date.now() + 180 * 1000),
-      pin: Math.random().toString(20).substring(2, 7),
-    },
-  });
-  return expiresAfter;
 });
