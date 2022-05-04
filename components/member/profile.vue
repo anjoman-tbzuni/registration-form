@@ -22,17 +22,6 @@
       <p>{{ memberStore.email }}</p>
     </div>
 
-    <!-- <div class="mt-3" v-if="!memberStore.verifiedPhoneNumber"> -->
-    <!--   <MemberVerifyPhone -->
-    <!--     @resend="resend" -->
-    <!--     @verify="verify" -->
-    <!--     :timeLeft="timeLeft" -->
-    <!--     :mins="mins" -->
-    <!--     :secs="secs" -->
-    <!--     :pending="pending" -->
-    <!--   /> -->
-    <!-- </div> -->
-
     <button class="bg-slate-700 text-slate-200 hover:bg-slate-900">
       <NuxtLink to="/update-profile"> تکمیل اطلاعات </NuxtLink>
     </button>

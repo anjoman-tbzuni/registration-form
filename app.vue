@@ -6,7 +6,7 @@
         انجمن اسلامی دانشگاه تبریز
       </h1>
     </div>
-    <NuxtPage />
+    <NuxtPage class="mb-12" />
     <div class="footer group">
       <NuxtLink to="/about" class="flex flex-row items-center">
         <p>معرفی انجمن</p>
@@ -27,9 +27,15 @@ import { Icon } from '@iconify/vue';
   @apply transition-all;
 }
 
+html {
+  height: -webkit-fill-available;
+}
+
 body {
-  @apply bg-slate-100;
+  @apply bg-slate-50 min-h-screen;
   direction: rtl;
+  height: -webkit-fill-available;
+  min-height: -webkit-fill-available;
   font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -37,16 +43,15 @@ body {
 }
 
 .container {
-  @apply m-auto max-w-md bg-slate-100 min-h-screen relative flex flex-col p-2 max-h-screen;
+  @apply m-auto max-w-md bg-slate-100 min-h-screen relative flex flex-col p-2;
 }
 
 .nav {
   @apply border-slate-300 py-2 text-center border-b flex flex-row items-center justify-center;
   direction: rtl;
 }
-
 .footer {
-  @apply bottom-1 left-2 right-2 absolute text-slate-800 m-1 self-center p-2 border-t border-t-slate-300 text-sm cursor-pointer hover:text-slate-900;
+  @apply bottom-1 left-2 right-2 absolute text-slate-800 self-center p-2 border-t border-t-slate-300 text-sm cursor-pointer hover:text-slate-900;
   :hover p {
     @apply pl-2;
   }
