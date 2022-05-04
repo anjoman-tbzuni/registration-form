@@ -2,9 +2,7 @@
   <div>
     <div class="flex flex-row mt-3">
       <Icon icon="emojione:warning" />
-      <p class="text-xs pr-1">
-        کد تایید ارسال شده است. لطفا صفحه را ریلود نکنید.
-      </p>
+      <p class="text-xs pr-1">لطفا احراز هویت را تکیمل کنید.</p>
     </div>
 
     <FormKit
@@ -28,16 +26,19 @@
         @click="resendAuthcode"
         :disabled="timeLeft > 0"
         :class="
-          timeLeft <= 0
+          timeLeft <= 0 && !pending
             ? 'button text-slate-200 bg-slate-700 hover:bg-slate-800'
             : 'button text-slate-400 bg-slate-200'
         "
       >
-        <p class="pl-2">ارسال مجدد</p>
-        <Icon icon="uil:comment-alt-redo" />
-        <p class="pr-2">
-          {{ timeLeft <= 0 ? '' : `${e2p(mins)}:${e2p(secs)}` }}
-        </p>
+        <p v-if="pending">لطفا کمی صبر کنید</p>
+        <div v-else class="flex flex-row">
+          <p v-if="timeLeft > 0" class="pl-2 w-10">
+            {{ `${e2p(mins)}:${e2p(secs)}` }}
+          </p>
+          <p class="pl-2">ارسال مجدد</p>
+          <Icon icon="uil:comment-alt-redo" />
+        </div>
       </button>
 
       <button
@@ -57,40 +58,21 @@
 
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
-import { useAuthCodeStore } from '@/store/auth-code';
-import { useMemberStore } from '~~/store/member';
 
 const e2p = (s: number) => s.toString().replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
 const pin = ref('');
-const authcodeStore = useAuthCodeStore();
-const memberStore = useMemberStore();
+const emit = defineEmits(['resend', 'verify']);
+const props = defineProps(['mins', 'secs', 'timeLeft', 'pending']);
 
-const pinExpires = ref(new Date(authcodeStore.expiresAfter).getTime());
-const now = ref(new Date().getTime());
-const timeLeft = ref(pinExpires.value - now.value);
-const mins = ref(Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60)));
-const secs = ref(Math.floor((timeLeft.value % (1000 * 60)) / 1000));
-
-const timer = setInterval(() => {
-  now.value = new Date().getTime();
-  timeLeft.value = pinExpires.value - now.value;
-  if (timeLeft.value > 0) {
-    mins.value = Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60));
-    secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
-  }
-}, 1000);
+const { mins, secs, timeLeft, pending } = toRefs(props);
 
 const resendAuthcode = async () => {
-  const expiresAfter = await $fetch(
-    `/api/members/resend-auth-code?phoneNumber=${memberStore.phoneNumber}`,
-  );
-  authcodeStore.expiresAfter = expiresAfter;
-  pinExpires.value = new Date(expiresAfter).getTime();
+  emit('resend');
 };
 
 const verifyAuthcode = () => {
-  console.log('verify');
+  emit('verify', pin);
 };
 </script>
 

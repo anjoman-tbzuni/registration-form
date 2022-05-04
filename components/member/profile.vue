@@ -21,46 +21,63 @@
       <p>{{ memberStore.email }}</p>
     </div>
     <div v-if="!memberStore.verifiedPhoneNumber">
-      <div v-if="!readyToVerify">
-        <div class="flex flex-row mt-3">
-          <Icon icon="emojione:warning" />
-          <p class="text-xs pr-1">
-            لطفا برای تایید شماره تماس خود اقدام بفرمایید.
-          </p>
-        </div>
-        <button
-          :class="
-            sending
-              ? 'bg-slate-200 text-slate-700 text-sm'
-              : 'bg-slate-700 text-sm hover:bg-slate-900 text-slate-200'
-          "
-          @click="goVerify"
-        >
-          {{ sending ? 'لطفا صبر کنید.' : 'تایید شماره تلفن' }}
-        </button>
-      </div>
-      <MemberVerifyPhone v-else />
+      <MemberVerifyPhone
+        @resend="resend"
+        @verify="verify"
+        :timeLeft="timeLeft"
+        :mins="mins"
+        :secs="secs"
+        :pending="pending"
+      />
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { Icon } from '@iconify/vue';
 import { useMemberStore } from '@/store/member';
-import { useAuthCodeStore } from '@/store/auth-code';
 
 const memberStore = useMemberStore();
-const authcodeStore = useAuthCodeStore();
 const readyToVerify = ref(false);
-const sending = ref(false);
 
-const goVerify = async () => {
-  sending.value = true;
-  const pinExpiers = await $fetch(
-    `/api/members/send-verify-code?phoneNumber=${memberStore.phoneNumber}`,
-  );
-  authcodeStore.expiresAfter = pinExpiers;
-  readyToVerify.value = true;
-  sending.value = false;
+const { data, refresh, pending } = await useAsyncData(
+  `/api/members/send-verify-code`,
+  () =>
+    $fetch('/api/members/send-verify-code', {
+      headers: useRequestHeaders(['cookie']),
+    }),
+);
+readyToVerify.value = true;
+
+const pinExpires = ref(new Date(data.value).getTime());
+const now = ref(new Date().getTime());
+const timeLeft = ref(pinExpires.value - now.value);
+const mins = ref(Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60)));
+const secs = ref(Math.floor((timeLeft.value % (1000 * 60)) / 1000));
+
+const timer = () => {
+  setTimeout(() => {
+    now.value = new Date().getTime();
+    timeLeft.value = pinExpires.value - now.value;
+    if (timeLeft.value > 0) {
+      mins.value = Math.floor(
+        (timeLeft.value % (1000 * 60 * 60)) / (1000 * 60),
+      );
+      secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
+    }
+    timer();
+    pending.value = false;
+  }, 1000);
+};
+
+timer();
+
+const resend = async () => {
+  await refresh();
+  pinExpires.value = new Date(data.value).getTime();
+  pending.value = true;
+};
+
+const verify = async (pin: string) => {
+  console.log('verify', pin);
 };
 </script>
 
