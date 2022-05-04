@@ -74,7 +74,7 @@ const resendAuthcode = async () => {
 };
 
 const verifyAuthcode = () => {
-  emit('verify', pin);
+  emit('verify', pin.value);
 };
 </script>
 

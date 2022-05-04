@@ -1,7 +1,7 @@
 import prisma from '~~/server/utils/prisma';
 
 export default defineEventHandler(async (event: CompatibilityEvent) => {
-  const { pin: givenPin } = useBody(event);
+  const { pin: givenPin } = await useBody(event);
   const { phoneNumber } = event.context.auth;
 
   try {
