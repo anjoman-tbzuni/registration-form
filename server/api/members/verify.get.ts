@@ -1,3 +1,4 @@
+import { authenticationCodeGenerator } from '~~/server/utils/nanoid';
 import prisma from '~~/server/utils/prisma';
 
 export default defineEventHandler(async (req: CompatibilityEvent) => {
@@ -16,7 +17,7 @@ export default defineEventHandler(async (req: CompatibilityEvent) => {
     const { expiresAfter } = await prisma.authCode.update({
       where: { phoneNumber },
       data: {
-        pin: Math.random().toString(20).substring(2, 7),
+        pin: authenticationCodeGenerator(),
         expiresAfter: new Date(Date.now() + 300 * 1000),
       },
     });
