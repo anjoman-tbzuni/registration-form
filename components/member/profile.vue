@@ -32,6 +32,7 @@
         :pending="pending"
       />
     </div>
+    <button v-else></button>
 
     <div
       v-if="logs.error.length || logs.message.length"
@@ -55,64 +56,75 @@ const logs = reactive({
   message: '',
 });
 
-const { data, refresh, pending } = await useAsyncData<
-  ResponseData<SendTokenResponse>
->(`/api/members/verfiy`, () =>
-  $fetch('/api/members/verify', {
-    headers: useRequestHeaders(['cookie']),
-  }),
-);
+const pinExpires = ref();
+const now = ref();
+const timeLeft = ref();
+const mins = ref();
+const secs = ref();
 
-const pinExpires = ref(new Date(data.value.data.expiresAfter).getTime());
-const now = ref(new Date().getTime());
-const timeLeft = ref(pinExpires.value - now.value);
-const mins = ref(Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60)));
-const secs = ref(Math.floor((timeLeft.value % (1000 * 60)) / 1000));
+let verify: (pin: string) => void;
+let resend: () => void;
 
-const timer = () => {
-  setTimeout(() => {
-    now.value = new Date().getTime();
-    timeLeft.value = pinExpires.value - now.value;
-    if (timeLeft.value > 0) {
-      mins.value = Math.floor(
-        (timeLeft.value % (1000 * 60 * 60)) / (1000 * 60),
-      );
-      secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
-    }
-    timer();
-    pending.value = false;
-  }, 1000);
-};
-
-timer();
-
-const resend = async () => {
-  await refresh();
-  pinExpires.value = new Date(data.value.data.expiresAfter).getTime();
-  pending.value = true;
-};
-
-const verify = async (pin: string) => {
-  const { data } = await useFetch<ResponseData<undefined>>(
-    '/api/members/verify',
-    {
-      method: 'POST',
+if (!memberStore.verifiedPhoneNumber) {
+  const { data, refresh, pending } = await useAsyncData<
+    ResponseData<SendTokenResponse>
+  >(`/api/members/verfiy`, () =>
+    $fetch('/api/members/verify', {
       headers: useRequestHeaders(['cookie']),
-      body: {
-        pin,
-      },
-    },
+    }),
   );
 
-  if (data.value.ok) {
-    logs.error = '';
-    logs.message = data.value.message;
-    setTimeout(() => location.reload(), 1000);
-  } else {
-    logs.error = data.value.error;
-    logs.message = '';
-  }
-};
+  pinExpires.value = new Date(data.value.data.expiresAfter).getTime();
+  now.value = new Date().getTime();
+  timeLeft.value = pinExpires.value - now.value;
+  mins.value = Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60));
+  secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
+
+  const timer = () => {
+    setTimeout(() => {
+      now.value = new Date().getTime();
+      timeLeft.value = pinExpires.value - now.value;
+      if (timeLeft.value > 0) {
+        mins.value = Math.floor(
+          (timeLeft.value % (1000 * 60 * 60)) / (1000 * 60),
+        );
+        secs.value = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
+      }
+      timer();
+      pending.value = false;
+    }, 1000);
+  };
+
+  timer();
+
+  resend = async () => {
+    await refresh();
+    pinExpires.value = new Date(data.value.data.expiresAfter).getTime();
+    pending.value = true;
+  };
+
+  verify = async (pin: string) => {
+    const { data } = await useFetch<ResponseData<undefined>>(
+      '/api/members/verify',
+      {
+        method: 'POST',
+        headers: useRequestHeaders(['cookie']),
+        body: {
+          pin,
+        },
+      },
+    );
+
+    if (data.value.ok) {
+      logs.error = '';
+      logs.message = data.value.message;
+      setTimeout(() => location.reload(), 1000);
+    } else {
+      logs.error = data.value.error;
+      logs.message = '';
+    }
+  };
+}
 </script>
 
 <style lang="postcss" scoped>
