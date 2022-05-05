@@ -24,7 +24,7 @@ interface MemberInterface {
   verifiedPhoneNumber: boolean;
   dormitoryStudent: boolean;
   dormitory?: string;
-  interests?: string[];
+  interests?: string;
   cooperationAreas?: string[];
   activityRecords?: string;
   role: Role;
@@ -44,7 +44,7 @@ interface SendTokenResponse {
 interface UpdateProfile {
   dormitoryStudent?: boolean;
   dormitory?: string;
-  interests?: string[];
+  interests?: string;
   cooperationAreas?: string[];
   activityRecords?: string;
   activityRecords?: string;

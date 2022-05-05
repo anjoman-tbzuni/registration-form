@@ -1,7 +1,11 @@
 <template>
   <div>
     <h2 class="mt-3 mb-1">تکمیل اطلاعات</h2>
+    <p v-if="error" class="text-base text-justify text-red-500 font-medium">
+      {{ error }}
+    </p>
     <FormKit
+      v-else
       type="form"
       v-model="body"
       submit-label="تکمیل اطلاعات"
@@ -17,7 +21,8 @@
       <div class="border-b">
         <FormKit
           type="checkbox"
-          value="false"
+          :value="memberStore.dormitoryStudent"
+          v-model="body.dormitoryStudent"
           label="خوابگاهی هستید؟"
           name="dormitoryStudent"
           wrapper-class="flex flex-row mb-2"
@@ -26,8 +31,9 @@
         />
 
         <FormKit
-          v-if="body.dormitoryStudent"
           type="text"
+          :value="body.dormitoryStudent ? memberStore.dormitory : ''"
+          :disabled="!body.dormitoryStudent"
           placeholder="خوابگاه"
           help="در کدام خوابگاه اقامت دارید؟"
           name="dormitory"
@@ -37,6 +43,8 @@
 
       <FormKit
         type="textarea"
+        name="activityRecords"
+        :value="memberStore.activityRecords"
         label="سوابق فعالیت (سیاسی، فراهنگی، اجتماعلی، علمی، اجرایی و ...)"
         cols="30"
         class="border-b"
@@ -47,6 +55,7 @@
       <FormKit
         name="cooperationAreas"
         type="checkbox"
+        :value="memberStore.cooperationAreas"
         label="زمینه‌های همکاری"
         :classes="{
           outer:
@@ -66,11 +75,12 @@
           'اطلاع رسانی (نشریه، سایت و ...)',
         ]"
         help="زمینه‌های همکاری با انجمن اسلامی دانشجویان:"
-        validation="required|min:3"
       />
 
       <FormKit
         type="textarea"
+        name="interests"
+        :value="memberStore.interests"
         label="توانمندی‌ها و علاقه مندی‌ها"
         cols="30"
         class="border-b"
@@ -78,11 +88,34 @@
         :classes="textareaClasses"
       />
     </FormKit>
-    {{ body }}
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useMemberStore } from '~~/store/member';
+
+const router = useRouter();
+const error = ref('');
+
+const body = ref<UpdateProfile>({
+  dormitoryStudent: false,
+} as UpdateProfile);
+
+const memberStore = useMemberStore();
+
+const submitForm = async () => {
+  const { data } = await useFetch('/api/members', {
+    method: 'PATCH',
+    body: body.value,
+  });
+
+  if (data.value.ok) {
+    router.push('/');
+  } else {
+    error.value = data.value.error;
+  }
+};
+
 const textClasses = {
   outer: 'mb-5',
   inner:
@@ -100,17 +133,6 @@ const textareaClasses = {
   label: 'text-sm mr-3 font-semibold',
   input:
     'w-full border-none text-sm text-gray-700 placeholder-gray-400 px-3 py-2 text-justify',
-};
-
-const body = ref<UpdateProfile>({
-  dormitoryStudent: false,
-} as UpdateProfile);
-
-const submitForm = async () => {
-  const { data } = await useFetch('/api/members', {
-    method: 'PATCH',
-    body: body.value,
-  });
 };
 </script>
 
