@@ -1,5 +1,23 @@
+import prisma from '~~/server/utils/prisma';
+
 export default defineEventHandler(async (event) => {
-  const body: UpdateProfile = await useBody(event);
-  console.log(body);
-  return;
+  try {
+    const body: UpdateProfile = await useBody(event);
+    await prisma.member.update({
+      where: {
+        phoneNumber: event.context.auth.phoneNumber as string,
+      },
+      data: body,
+    });
+
+    return {
+      ok: true,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      ok: false,
+      error: err.message,
+    };
+  }
 });

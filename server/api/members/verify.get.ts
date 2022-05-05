@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         },
       });
 
-      // await sms.sendAuthCode(to, code);
+      await sms.sendAuthCode(to, code);
 
       return {
         ok: true,
@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // await sms.sendAuthCode(to, code);
+    await sms.sendAuthCode(to, code);
 
     return {
       ok: true,
