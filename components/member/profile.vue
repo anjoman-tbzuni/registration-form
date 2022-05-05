@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1 class="my-2">اطلاعات ثبت نام</h1>
+    <h2 class="my-2">اطلاعات ثبت نام</h2>
     <div class="row">
       <label>نام:</label>
       <p>{{ memberStore.name }}</p>
@@ -21,13 +21,31 @@
       <label>ایمیل:</label>
       <p>{{ memberStore.email }}</p>
     </div>
+    <div class="row" v-if="memberStore.dormitory">
+      <label>خوابگاه:</label>
+      <p>{{ memberStore.dormitory }}</p>
+    </div>
+    <div class="col" v-if="memberStore.activityRecords">
+      <label>سابقه فعالیت:</label>
+      <p class="mt-2">{{ memberStore.activityRecords }}</p>
+    </div>
+    <div class="col" v-if="memberStore.interests">
+      <label>علاقه مندی‌ها و توانمندی‌ها:</label>
+      <p class="mt-2">{{ memberStore.interests }}</p>
+    </div>
+    <div class="flex-col py-3" v-if="memberStore.cooperationAreas.length">
+      <label>زمینه‌های همکاری: </label>
+      <p v-for="area in memberStore.cooperationAreas" :key="area" class="pt-2">
+        - {{ area }}
+      </p>
+    </div>
 
     <NuxtLink
       to="/update-profile"
       class="flex flex-row items-center mt-3 w-fit group text-slate-800 hover:text-slate-900"
     >
-      <p class="pl-2 group-hover:pl-3">تکمیل اطلاعات حساب</p>
-      <Icon icon="bi:arrow-left" />
+      <p class="border-b border-b-slate-600">تکمیل/اصلاح اطلاعات حساب</p>
+      <Icon icon="bi:arrow-left" class="group-hover:mr-3 mr-2" />
     </NuxtLink>
   </div>
 </template>
@@ -45,6 +63,10 @@ const memberStore = useMemberStore();
 
 .row {
   @apply border-b flex flex-row py-3 border-slate-200;
+}
+
+.col {
+  @apply border-b flex flex-col py-3 border-slate-200;
 }
 
 label {

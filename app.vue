@@ -47,7 +47,7 @@ body {
 }
 
 .nav {
-  @apply border-slate-300 py-2 text-center border-b flex flex-row items-center justify-center;
+  @apply border-slate-200 py-2 text-center border-b flex flex-row items-center justify-center;
   direction: rtl;
 }
 .footer {
