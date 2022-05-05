@@ -1,8 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const router = useRouter();
-
-  if (to.params.studentNumber) {
-    navigateTo('/');
+  if (to.params.phone) {
+    return true;
   }
-  router.push('/login');
+
+  return navigateTo('/');
 });

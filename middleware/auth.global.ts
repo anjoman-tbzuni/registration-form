@@ -12,6 +12,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     memberStore.$patch({
       ...data.data,
     });
+
+    to.params.phone = data.data.phoneNumber;
   }
 
   navigateTo('/');
