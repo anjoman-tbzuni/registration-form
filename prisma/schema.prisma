@@ -23,7 +23,7 @@ model Member {
   studentNumber Int @unique
   dormitoryStudent Boolean @default(false)
   dormitory String?
-  interests String[]
+  interests String?
   cooperationAreas String[]
   activityRecords String?
   role Role @default(User) 
