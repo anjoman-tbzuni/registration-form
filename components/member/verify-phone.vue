@@ -72,6 +72,9 @@
 
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
+const route = useRoute();
+
+const emit = defineEmits(['sended']);
 
 const e2p = (s: number) => s.toString().replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
@@ -81,13 +84,14 @@ const logs = reactive({
   message: '',
 });
 
-const { data, refresh, pending } = await useAsyncData<
-  ResponseData<SendTokenResponse>
->(`/api/members/verfiy`, () =>
-  $fetch('/api/members/verify', {
-    headers: useRequestHeaders(['cookie']),
-  }),
-);
+const {
+  data,
+  refresh,
+  pending: pending,
+} = await useFetch<ResponseData<SendTokenResponse>>(`/api/members/verify`, {
+  headers: useRequestHeaders(['cookie']),
+});
+emit('sended');
 
 const pinExpires = ref(new Date(data.value.data.expiresAfter).getTime());
 const now = ref(new Date().getTime());

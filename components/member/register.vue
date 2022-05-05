@@ -102,7 +102,6 @@
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
 import { useMemberStore } from '@/store/member';
-import { Member } from '.prisma/client';
 
 interface MemberForm extends Omit<CreateMember, 'studentNumber'> {
   studentNumber: string;
@@ -113,6 +112,8 @@ const memberStore = useMemberStore();
 const body = ref<MemberForm>({} as MemberForm);
 const pending = ref(false);
 const errors = ref([]);
+
+const emit = defineEmits(['registered']);
 
 // Classes
 const textClasses = {
@@ -127,19 +128,23 @@ const textClasses = {
 
 const submitForm = async () => {
   pending.value = true;
-  const { data } = await useFetch<ResponseData<Member>>('/api/members', {
-    method: 'POST',
-    body: {
-      ...body.value,
-      studentNumber: parseInt(body.value.studentNumber),
+  const { data } = await useFetch<ResponseData<MemberInterface>>(
+    '/api/members',
+    {
+      method: 'POST',
+      body: {
+        ...body.value,
+        studentNumber: parseInt(body.value.studentNumber),
+      },
     },
-  });
+  );
 
   if (data.value.ok) {
     memberStore.$patch({
       ...data.value.data,
     });
     pending.value = false;
+    emit('registered');
   } else {
     errors.value.push(data.value.error);
     pending.value = false;
