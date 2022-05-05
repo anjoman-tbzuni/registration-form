@@ -50,10 +50,10 @@
         label="زمینه‌های همکاری"
         :classes="{
           outer:
-            'border border-slate-300 rounded-lg p-3 pb-0 mt-8 mb-5 relative text-sm',
+            'border border-slate-300 rounded-lg py-4 px-4 pb-0 mt-9 mb-6 relative text-sm',
           legend:
             'absolute -top-3 bg-slate-50 px-1 right-5 text-sm font-semibold',
-          help: 'text-sm text-gray-500 pt-4 pb-3',
+          help: 'text-sm text-gray-500 pt-2 pb-3',
           wrapper: 'flex flex-row mb-4 items-center',
           inner: 'flex items-center ml-2',
         }"
@@ -113,3 +113,9 @@ const submitForm = async () => {
   });
 };
 </script>
+
+<style lang="postcss">
+textarea {
+  @apply p-4 h-32;
+}
+</style>

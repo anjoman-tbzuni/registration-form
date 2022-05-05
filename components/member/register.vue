@@ -118,7 +118,7 @@ const errors = ref([]);
 const textClasses = {
   outer: 'mb-5',
   inner:
-    'w-full border border-gray-300 rounded-lg mb-1 overflow-hidden focus-within:border-blue-300',
+    'w-full border border-slate-300 rounded-lg mb-1 overflow-hidden focus-within:border-blue-300',
   input:
     'w-full h-10 px-3 border-none text-sm text-gray-700 placeholder-gray-400',
   help: 'text-xs text-gray-500',
