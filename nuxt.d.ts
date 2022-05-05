@@ -6,10 +6,6 @@ interface CreateMember {
   familyName: string;
 }
 
-interface UpdateMember {
-  activityRecords?: string;
-}
-
 interface JwtPayload {
   phoneNumber: string;
 }
@@ -30,6 +26,7 @@ interface MemberInterface {
   dormitory?: string;
   interests?: string[];
   cooperationAreas?: string[];
+  activityRecords?: string;
   role: Role;
 }
 
@@ -42,4 +39,13 @@ interface ResponseData<T> {
 
 interface SendTokenResponse {
   expiresAfter: Date;
+}
+
+interface UpdateProfile {
+  dormitoryStudent?: boolean;
+  dormitory?: string;
+  interests?: string[];
+  cooperationAreas?: string[];
+  activityRecords?: string;
+  activityRecords?: string;
 }
