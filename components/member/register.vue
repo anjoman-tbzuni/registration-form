@@ -6,10 +6,10 @@
       v-model="body"
       submit-label="ثبت نام"
       :classes="{
-        actions: `text-center rounded-xl text-sm hover:bg-slate-900 transition cursor-pointer ${
+        actions: `text-center rounded-xl text-sm  transition cursor-pointer ${
           pending
-            ? 'bg-slate-200 text-slate-800'
-            : 'bg-slate-800 text-slate-100'
+            ? 'bg-slate-200 text-slate-800 '
+            : 'bg-slate-800 text-slate-100 hover:bg-slate-900'
         } `,
         message: 'text-xs text-red-500 pb-2',
       }"
