@@ -8,7 +8,7 @@
     </div>
     <NuxtPage class="mb-12" />
     <div class="footer group">
-      <NuxtLink to="/about" class="flex flex-row items-center">
+      <NuxtLink to="/about" class="w-fit flex flex-row items-center">
         <p>معرفی انجمن</p>
         <Icon icon="bi:arrow-left" />
       </NuxtLink>
@@ -51,7 +51,7 @@ body {
   direction: rtl;
 }
 .footer {
-  @apply bottom-1 left-2 right-2 absolute text-slate-800 self-center p-2 border-t border-t-slate-300 text-sm cursor-pointer hover:text-slate-900;
+  @apply bottom-1 left-2 right-2 absolute text-slate-800 self-center p-2 border-t border-t-slate-300 text-sm hover:text-slate-900;
   :hover p {
     @apply pl-2;
   }

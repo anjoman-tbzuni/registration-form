@@ -22,12 +22,17 @@
       <p>{{ memberStore.email }}</p>
     </div>
 
-    <button class="bg-slate-700 text-slate-200 hover:bg-slate-900">
-      <NuxtLink to="/update-profile"> تکمیل اطلاعات </NuxtLink>
-    </button>
+    <NuxtLink
+      to="/update-profile"
+      class="flex flex-row items-center mt-3 w-fit group text-slate-800 hover:text-slate-900"
+    >
+      <p class="pl-2 group-hover:pl-3">تکمیل اطلاعات حساب</p>
+      <Icon icon="bi:arrow-left" />
+    </NuxtLink>
   </div>
 </template>
 <script lang="ts" setup>
+import { Icon } from '@iconify/vue';
 import { useMemberStore } from '@/store/member';
 
 const memberStore = useMemberStore();

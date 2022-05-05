@@ -6,8 +6,11 @@
       v-model="body"
       submit-label="ثبت نام"
       :classes="{
-        actions:
-          'bg-slate-800 text-center text-slate-100 rounded-xl text-sm hover:bg-slate-900 transition cursor-pointer',
+        actions: `text-center rounded-xl text-sm hover:bg-slate-900 transition cursor-pointer ${
+          pending
+            ? 'bg-slate-200 text-slate-800'
+            : 'bg-slate-800 text-slate-100'
+        } `,
         message: 'text-xs text-red-500 pb-2',
       }"
       incomplete-message="لطفا اطلاعات وارد شده را اصلاح کنید."
@@ -108,6 +111,7 @@ interface MemberForm extends Omit<CreateMember, 'studentNumber'> {
 const memberStore = useMemberStore();
 
 const body = ref<MemberForm>({} as MemberForm);
+const pending = ref(false);
 const errors = ref([]);
 
 // Classes
@@ -122,6 +126,7 @@ const textClasses = {
 };
 
 const submitForm = async () => {
+  pending.value = true;
   const { data } = await useFetch<ResponseData<Member>>('/api/members', {
     method: 'POST',
     body: {
@@ -134,8 +139,10 @@ const submitForm = async () => {
     memberStore.$patch({
       ...data.value.data,
     });
+    pending.value = false;
   } else {
     errors.value.push(data.value.error);
+    pending.value = false;
   }
 };
 </script>
